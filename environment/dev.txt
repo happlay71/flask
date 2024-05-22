@@ -1,0 +1,11 @@
+-r requirements.txt
+certifi==2023.7.22
+chardet==3.0.4
+coverage==7.2.7
+faker==19.2.0
+httpie==3.2.2
+idna==3.4
+Pygments==2.15.1
+requests==2.31.0
+selenium==4.11.2
+urllib3==2.0.4

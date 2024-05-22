@@ -1,0 +1,82 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
+
+{% block title %}Flasky{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation" style="background-color: pink;">  <!--定义了一个导航栏容器，使用了 navbar-inverse 样式，表示导航栏的背景是黑色的-->
+    <div class="container">  <!--定义了一个容器，用于包裹导航栏的内容-->
+        <div class="navbar-header">  <!--定义了导航栏的标题和响应式导航按钮-->
+            <button type="button" class="navbar-toggle"
+                    data-toggle="collapse" data-target=".navbar-collapse">  <!--定义了一个响应式导航按钮，当屏幕尺寸较小时，点击按钮可以展开或折叠导航栏的内容-->
+                <span class="sr-only">Toggle navigation</span>  <!--用于屏幕阅读器的访问性支持，表示导航栏的展开和折叠状态-->
+                <span class="icon-bar"></span>  
+                <span class="icon-bar"></span>  <!--定义了导航栏按钮的图标条，有三个条表示一个按钮-->
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Flasky</a>  <!--定义了导航栏的品牌标题，点击标题会返回主页-->
+        </div>
+        <div class="navbar-collapse collapse">  <!--定义了导航栏的折叠内容，当屏幕尺寸较小时，导航栏的内容会被折叠起来-->
+            <ul class="nav navbar-nav">  <!--定义了导航栏的链接列表-->
+                <li><a href='/'>Home</a></li>  <!--定义了一个链接项，表示返回主页-->
+            </ul>
+            <ul class="nav navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if current_user.can(Permission.MODERATE) %}
+                <li><a href="{{ url_for('main.moderate') }}">Moderate Comments</a></li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">  <!--创建一个链接，点击后触发下拉菜单的展开和收起。链接内部包含用户的头像和"Account"文本-->
+                        <img src="{{ current_user.gravatar(size=18) }}">  
+                        Account <b class="caret"></b>  <!--创建一个小箭头，表示下拉菜单的展开状态-->
+                    </a>
+                    <ul class="dropdown-menu">  <!--创建下拉菜单的内容部分-->
+                        <li><a href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                        <li><a href="{{ url_for('auth.change_email_request') }}">Change Email</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}  
+<div class="container">  <!--渲染闪现消息-->
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+<!--引入Moment.js库-->
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+{% macro pagination_widget(pagination, endpoint, fragment='') %}  <!--用于生成分页导航栏-->
+<ul class="pagination">  <!--用于显示分页导航栏的外层容器-->
+    <li {% if not pagination.has_prev %} class="disabled"{% endif %}>
+        <a href="{% if pagination.has_prev %}{{ url_for(endpoint,
+            page = pagination.page - 1, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">&laquo;</a>  <!--&laquo;为 '<<' -->
+    </li>
+    {% for p in pagination.iter_pages() %}  <!--遍历所有分页的页码-->
+        {% if p %}
+            {% if p == pagination.page %}
+            <li class="active">
+                <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li><a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a></li>
+            {% endif %}
+        {% else %}
+        <li class="disabled"><a href="#">&hellip;</a></li>  <!--&hellip;为 '...' -->
+        {% endif %}
+    {% endfor %}
+    <li {% if not pagination.has_next %} class="disabled"{% endif %}>
+        <a href="{% if pagination.has_next %}{{ url_for(endpoint,
+            page = pagination.page + 1, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">&raquo;</a>
+    </li>
+</ul>
+{% endmacro %}
+
+
